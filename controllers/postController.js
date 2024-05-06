@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const slugify = require('slugify');
 const Post = require('../models/Post');
+const { body, validationResult } = require('express-validator');
 
 async function createSlug(title) {
     try {
@@ -38,20 +39,37 @@ exports.postsGetId = asyncHandler(async function (req, res, next) {
     }
 })
 
-exports.postsPost = asyncHandler(async function (req, res, next) {
-    const slug = await createSlug(req.body.title);
+exports.postsPost = [
+    body('title').isLength({ min: 1 }).trim().withMessage('Title must be specified.'),
+    body('content').isLength({ min: 1 }).trim().withMessage('Content must be specified.'),
 
-    const post = new Post({
-        title: req.body.title,
-        content: req.body.content,
-        author: req.body.author,
-        slug: slug,
-        date: new Date(),
-    });
+    asyncHandler(async function (req, res, next) {
+        const errors = validationResult(req);
 
-    await post.save();
-    res.json(post);
-})
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const title = req.body.title;
+        const content = req.body.content;
+
+        try {
+            const slug = await createSlug(title);
+
+            const newPost = new Post({
+                title,
+                content,
+                slug
+            });
+
+            await newPost.save();
+            res.json('Post created');
+        } catch (error) {
+            console.error('Error in creating post', error);
+            res.status(500).json('Error in creating post');
+        }
+    })
+]
 
 exports.postsPut = asyncHandler(async function (req, res, next) {
     const id = req.params.id;

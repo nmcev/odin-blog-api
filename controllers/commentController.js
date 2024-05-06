@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Comment = require('../models/Comment')
 const Post = require('../models/Post')
+const { body, validationResult } = require('express-validator')
 
 
 exports.comment_get = asyncHandler(async function (req, res, next) {
@@ -15,19 +16,24 @@ exports.comment_get_id = asyncHandler(async function (req, res, next) {
     res.json(comment)
 })
 
-exports.comment_post = asyncHandler(async function (req, res, next) {
-    const postId = req.body.postId
-    const newComment = new Comment({
-        username: req.body.username,
-        text: req.body.text,
-        post: postId
+exports.comment_post = [
+    body('username').isLength({ min: 1 }).trim().withMessage('Username must be specified.'),
+    body('text').isLength({ min: 1 }).trim().withMessage('Text must be specified.'),
+
+    asyncHandler(async function (req, res, next) {
+        const postId = req.body.postId
+        const newComment = new Comment({
+            username: req.body.username,
+            text: req.body.text,
+            post: postId
+        })
+
+
+        await newComment.save()
+        await Post.findByIdAndUpdate(postId, { $push: { comments: newComment._id } })
+        res.json(newComment)
     })
-
-
-    await newComment.save()
-    await Post.findByIdAndUpdate(postId, { $push: { comments: newComment._id } })
-    res.json(newComment)
-})
+]
 
 exports.comment_put = asyncHandler(async function (req, res, next) {
     const id = req.params.id
