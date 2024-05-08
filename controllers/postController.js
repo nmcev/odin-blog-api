@@ -59,7 +59,8 @@ exports.postsPost = [
             const newPost = new Post({
                 title,
                 content,
-                slug
+                slug,
+                published: req.body.published,
             });
 
             await newPost.save();
