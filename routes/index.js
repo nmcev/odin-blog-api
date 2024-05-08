@@ -55,9 +55,9 @@ router.post('/logout', (req, res) => {
 router.post('/signup', loginController.signup_post)
 
 // posts routes
-router.get('/posts', authenticateToken, postController.postsGet)
+router.get('/posts', postController.postsGet)
 
-router.get('/posts/:slug', authenticateToken, postController.postsGetId)
+router.get('/posts/:slug', postController.postsGetId)
 
 router.post('/posts', authenticateToken, postController.postsPost)
 
@@ -66,9 +66,9 @@ router.put('/posts/:id', authenticateToken, postController.postsPut)
 router.delete('/posts/:id', authenticateToken, postController.postsDelete)
 
 // comments routes
-router.get('/comments', authenticateToken, commentControllers.comment_get)
+router.get('/comments', commentControllers.comment_get)
 
-router.get('/comments/:id', authenticateToken, commentControllers.comment_get_id)
+router.get('/comments/:id', commentControllers.comment_get_id)
 
 router.post('/comments', authenticateToken, commentControllers.comment_post)
 
