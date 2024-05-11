@@ -10,7 +10,7 @@ exports.comment_get = asyncHandler(async function (req, res, next) {
 })
 
 exports.comment_get_id = asyncHandler(async function (req, res, next) {
-    const id = req.body.id
+    const id = req.params.id
     const comment = await Comment.findById(id)
 
     res.json(comment)
