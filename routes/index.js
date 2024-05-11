@@ -32,11 +32,7 @@ function authenticateToken(req, res, next) {
   }
 }
 
-express().use((req, res, next) => {
 
-  console.log(req.user);
-  next();
-})
 
 router.get('/users', async (req, res) => {
   const users = await User.find();
