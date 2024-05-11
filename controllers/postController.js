@@ -23,7 +23,7 @@ exports.postsGet = asyncHandler(async function (req, res, next) {
 })
 
 exports.postsGetId = asyncHandler(async function (req, res, next) {
-    const slug = req.body.slug;
+    const slug = req.params.slug;
     try {
         const post = await Post.findOne({ slug })
 
@@ -61,6 +61,7 @@ exports.postsPost = [
                 content,
                 slug,
                 published: req.body.published,
+                img: req.body.img64
             });
 
             await newPost.save();

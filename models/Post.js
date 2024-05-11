@@ -13,7 +13,8 @@ const postSchema = new Schema({
         unique: true,
         required: true
     },
-    published: { type: Boolean, default: false }
+    published: { type: Boolean, default: false },
+    img: { type: String}
 });
 
 module.exports = mongoose.model('Post', postSchema);
