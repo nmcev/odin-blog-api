@@ -43,14 +43,15 @@ exports.login_post = [
                 return res.status(400).json({ errors: [{ msg: 'Invalid Username', path: 'username' }] });
             }
 
-            const isMatch = bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(400).json({ errors: [{ msg: 'Invalid Password', path: 'password' }] });
-            }
+            bcrypt.compare(password, user.password).then(isMatch => {
+                if (!isMatch) {
+                    return res.status(400).json({ errors: [{ msg: 'Invalid Password', path: 'password' }] });
+                }
 
-            const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10h'});
+                const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10h'});
 
-            res.json({ accessToken, status: 'success' });
+                res.json({ accessToken, status: 'success' });
+            });
         } catch (error) {
             next(error);
         }
