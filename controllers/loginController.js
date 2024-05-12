@@ -40,17 +40,17 @@ exports.login_post = [
             const user = await User.findOne({ username });
 
             if (!user) {
-                return res.status(400).json('User not found');
+                return res.status(400).json({ errors: [{ msg: 'Invalid Username' }] });
             }
 
             const isMatch = bcrypt.compare(password, user.password);
             if (!isMatch) {
-                return res.status(400).json('Incorrect password');
+                return res.status(400).json({ errors: [{ msg: 'Invalid Password' }] });
             }
 
             const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10h'});
 
-            res.json({ accessToken });
+            res.json({ accessToken, status: 'success' });
         } catch (error) {
             next(error);
         }
