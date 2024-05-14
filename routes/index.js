@@ -11,25 +11,20 @@ const loginController = require('../controllers/loginController');
 
 
 function authenticateToken(req, res, next) {
-  const bearerHeader = req.headers['authorization'];
+  const { token } = req.cookies;
 
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
-    const token = bearer[1];
+  if (!token) {
+      return res.status(401).json({ error: 'Unauthorized - Token missing' });
+  }
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
-        return res.sendStatus(403);
+          return res.status(401).json({ error: 'Unauthorized - Invalid token' });
       }
 
-      req.user = user;
-      req.token = token;
-
-      next();
-    });
-  } else {
-    res.sendStatus(401);
-  }
+      req.user = decoded;
+      next(); 
+  });
 }
 
 
