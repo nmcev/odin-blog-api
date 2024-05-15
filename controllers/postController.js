@@ -65,7 +65,7 @@ exports.postsPost = [
             });
 
             await newPost.save();
-            res.json('Post created');
+            res.json({msg: 'Post created!'});
         } catch (error) {
             console.error('Error in creating post', error);
             res.status(500).json('Error in creating post');
