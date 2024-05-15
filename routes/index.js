@@ -39,7 +39,7 @@ router.post('/login', loginController.login_post)
 
 //logout routes
 router.post('/logout', (req, res) => {
-  res.send('Logout route')
+  res.cookie('token', '').json({ loggedOut: true })
 })
 
 //signup routes
@@ -68,4 +68,8 @@ router.put('/comments/:id', authenticateToken, commentControllers.comment_put)
 router.delete('/comments/:id', authenticateToken, commentControllers.comment_delete)
 
 
+// validate token
+router.get('/auth', authenticateToken, (req, res) => {
+  res.json({ valid: true })
+})
 module.exports = router;
