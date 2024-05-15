@@ -50,7 +50,7 @@ exports.login_post = [
 
                 const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10h'});
 
-                res.json({ accessToken, status: 'success' });
+                res.cookie('token', accessToken).json({ user, status: 'success' })
             });
         } catch (error) {
             next(error);
