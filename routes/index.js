@@ -39,7 +39,7 @@ router.post('/login', loginController.login_post)
 
 //logout routes
 router.post('/logout', (req, res) => {
-  res.cookie('token', '').json({ loggedOut: true })
+  res.clearCookie('token').json({message: 'logout successfully!'})
 })
 
 //signup routes
