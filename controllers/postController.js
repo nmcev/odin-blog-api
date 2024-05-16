@@ -83,13 +83,9 @@ exports.postsPost = [
 
 exports.postsPut = asyncHandler(async function (req, res, next) {
     const id = req.params.id;
+    const { published } = req.body;
 
-    const newPost = new Post({
-        title: req.body.title,
-        content: req.body.content,
-    })
-
-    await Post.findByIdAndUpdate(id, newPost);
+    await Post.findByIdAndUpdate(id, {published}, {new: true});
     res.json('Post updated');
 })
 
