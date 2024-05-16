@@ -83,10 +83,15 @@ exports.postsPost = [
 
 exports.postsPut = asyncHandler(async function (req, res, next) {
     const id = req.params.id;
-    const { published } = req.body;
+    const { published, content, title, img } = req.body;
 
-    await Post.findByIdAndUpdate(id, {published}, {new: true});
-    res.json('Post updated');
+    try {
+        await Post.findByIdAndUpdate(id, { published, content, title, img }, {new: true});
+        res.json({msg: 'Post Updated!'});
+    } catch (err) {
+        console.error('Error in finding post by slug', err);
+        res.status(500).json('Error in updating ');
+ }
 })
 
 exports.postsDelete = asyncHandler(async function (req, res, next) {
