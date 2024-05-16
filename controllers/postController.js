@@ -81,19 +81,30 @@ exports.postsPost = [
     })
 ]
 
-exports.postsPut = asyncHandler(async function (req, res, next) {
-    const id = req.params.id;
-    const { published, content, title, img } = req.body;
+exports.postsPut = [
+    body('title').isLength({ min: 1 }).trim().withMessage('Title must be specified.'),
+    body('content').isLength({ min: 1 }).trim().withMessage('Content must be specified.'),
+    
+    asyncHandler(async function (req, res, next) {
+        const errors = validationResult(req)
 
-    try {
-        await Post.findByIdAndUpdate(id, { published, content, title, img }, {new: true});
-        res.json({msg: 'Post Updated!'});
-    } catch (err) {
-        console.error('Error in finding post by slug', err);
-        res.status(500).json('Error in updating ');
- }
-})
-
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        
+        const id = req.params.id;
+        const { published, content, title, img } = req.body;
+    
+        try {
+            await Post.findByIdAndUpdate(id, { published, content, title, img }, {new: true});
+            res.json({msg: 'Post Updated!'});
+        } catch (err) {
+            console.error('Error in finding post by slug', err);
+            res.status(500).json('Error in updating ');
+     }
+    })
+    
+]
 exports.postsDelete = asyncHandler(async function (req, res, next) {
     const id = req.params.id;
     await Post.findByIdAndDelete(id)
