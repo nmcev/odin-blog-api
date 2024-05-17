@@ -33,7 +33,7 @@ exports.postsGet = asyncHandler(async function (req, res, next) {
 exports.postsGetId = asyncHandler(async function (req, res, next) {
     const slug = req.params.slug;
     try {
-        const post = await Post.findOne({ slug })
+        const post = await Post.findOne({ slug }).populate('comments').exec();
 
         if (!post) {
             res.status(404).json('Post not found');
