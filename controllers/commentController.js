@@ -21,6 +21,11 @@ exports.comment_post = [
     body('text').isLength({ min: 1 }).trim().withMessage('Text must be specified.'),
 
     asyncHandler(async function (req, res, next) {
+        const errors = validationResult(req)
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const postId = req.body.postId
         const newComment = new Comment({
             username: req.body.username,
