@@ -24,7 +24,7 @@ exports.postsGet = asyncHandler(async function (req, res, next) {
     const posts = await Post.find({});
     const postsWithPostedTime = posts.map(post => ({
         ...post.toJSON(),
-        postedTime: luxon.DateTime.fromJSDate(post.date).toLocaleString(luxon.DateTime.DATE_SHORT)
+        postedTime: luxon.DateTime.fromJSDate(post.date).toLocaleString(luxon.DateTime.DATE_MED)
 
     }));
     res.json(postsWithPostedTime);
@@ -39,7 +39,17 @@ exports.postsGetId = asyncHandler(async function (req, res, next) {
             res.status(404).json('Post not found');
             return;
         }
-        res.json(post);
+
+        // Format the date for each comment
+        const postWithFormattedComments = {
+            ...post.toObject(),
+            comments: post.comments.map(comment => ({
+                ...comment.toObject(),
+                formattedDate: luxon.DateTime.fromJSDate(comment.date).toLocaleString(luxon.DateTime.DATETIME_SHORT)
+            }))
+        };
+
+        res.json(postWithFormattedComments);
 
     } catch (error) {
         console.error('Error in finding post by slug', error);
