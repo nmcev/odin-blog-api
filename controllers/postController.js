@@ -69,7 +69,7 @@ exports.postsPost = [
                 content,
                 slug,
                 published: req.body.published,
-                img: req.body.img64
+                img: req.body.img
             });
 
             await newPost.save();
