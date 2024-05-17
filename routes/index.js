@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken')
-
+const s3 = require('../controllers/s3')
 const User = require('../models/User')
 
 
@@ -72,4 +72,12 @@ router.delete('/comments/:id', authenticateToken, commentControllers.comment_del
 router.get('/auth', authenticateToken, (req, res) => {
   res.json({ valid: true })
 })
+
+router.get('/upload', async(req, res) => {
+  const url = await s3.generateUploadURL()
+  
+  res.json({url})
+})
+
+
 module.exports = router;
