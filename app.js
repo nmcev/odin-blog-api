@@ -13,7 +13,7 @@ var usersRouter = require('./routes/about');
 var app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'https://blog.muha.tech/'],
   credentials: true,
 }
 app.use(cors(corsOptions))
