@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const slugify = require('slugify');
 const Post = require('../models/Post');
 const { body, validationResult } = require('express-validator');
-const luxon = require('luxon')
+const { DateTime } = require('luxon')
 
 async function createSlug(title) {
     try {
@@ -22,12 +22,22 @@ async function createSlug(title) {
 exports.postsGet = asyncHandler(async function (req, res, next) {
 
     const posts = await Post.find({}).populate('comments').exec();
-    const postsWithPostedTime = posts.map(post => ({
-        ...post.toJSON(),
-        postedTime: luxon.DateTime.fromJSDate(post.date).toLocaleString(luxon.DateTime.DATE_MED)
 
-    }));
-    res.json(postsWithPostedTime);
+    const postsWithFormattedTime = posts.map(post => {
+        const postObj = post.toObject();
+
+        postObj.postedTime = DateTime.fromJSDate(post.date).toLocaleString(DateTime.DATE_MED);
+
+        postObj.comments = postObj.comments.map(comment => {
+            const commentObj = comment.toObject();
+            commentObj.formattedDate = DateTime.fromJSDate(comment.date).toLocaleString(DateTime.DATETIME_SHORT);
+            return commentObj;
+        });
+
+        return postObj;
+    });
+
+    res.json(postsWithFormattedTime);
 })
 
 exports.postsGetId = asyncHandler(async function (req, res, next) {
