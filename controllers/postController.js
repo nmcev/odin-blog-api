@@ -24,17 +24,17 @@ exports.postsGet = asyncHandler(async function (req, res, next) {
     const posts = await Post.find({}).populate('comments').exec();
 
     const postsWithFormattedTime = posts.map(post => {
-        const postObj = post.toObject();
+        const { _id, title, content, comments, date } = post;
 
-        postObj.postedTime = DateTime.fromJSDate(post.date).toLocaleString(DateTime.DATE_MED);
+        const postedTime = DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED);
 
-        postObj.comments = postObj.comments.map(comment => {
-            const commentObj = comment.toObject();
-            commentObj.formattedDate = DateTime.fromJSDate(comment.date).toLocaleString(DateTime.DATETIME_SHORT);
-            return commentObj;
+        const formattedComments = comments.map(comment => {
+            const { _id, username, text, date } = comment;
+            const formattedDate = DateTime.fromJSDate(date).toLocaleString(DateTime.DATETIME_SHORT);
+            return { _id, username, text, formattedDate };
         });
 
-        return postObj;
+        return { _id, title, content, comments: formattedComments, postedTime };
     });
 
     res.json(postsWithFormattedTime);
