@@ -36,9 +36,13 @@ exports.comment_post = [
 
         await newComment.save()
         await Post.findByIdAndUpdate(postId, { $push: { comments: newComment._id } })
+
+        const newCommentObject = newComment.toObject();
+        const formattedDate = DateTime.fromJSDate(newComment.date).toLocaleString(DateTime.DATETIME_SHORT);
+
         res.json({
-            ...newComment,
-            formattedDate: luxon.DateTime.fromJSDate(newComment.date).toLocaleString(luxon.DateTime.DATETIME_SHORT)
+            ...newCommentObject,
+            formattedDate
         })
     })
 ]
