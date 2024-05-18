@@ -60,7 +60,7 @@ exports.postsGetId = asyncHandler(async function (req, res, next) {
 exports.postsPost = [
     body('title').isLength({ min: 1 }).trim().withMessage('Title must be specified.'),
     body('content').isLength({ min: 1 }).trim().withMessage('Content must be specified.'),
-
+    body('description').isLength({min: 1}).trim().withMessage('Description must be specified.'),
     asyncHandler(async function (req, res, next) {
         const errors = validationResult(req);
 
@@ -70,6 +70,7 @@ exports.postsPost = [
 
         const title = req.body.title;
         const content = req.body.content;
+        const description = req.body.description;
 
         try {
             const slug = await createSlug(title);
@@ -79,7 +80,8 @@ exports.postsPost = [
                 content,
                 slug,
                 published: req.body.published,
-                img: req.body.img
+                img: req.body.img,
+                description,
             });
 
             await newPost.save();
@@ -94,6 +96,7 @@ exports.postsPost = [
 exports.postsPut = [
     body('title').isLength({ min: 1 }).trim().withMessage('Title must be specified.'),
     body('content').isLength({ min: 1 }).trim().withMessage('Content must be specified.'),
+    body('description').isLength({ min: 1 }).trim().withMessage('Description must be specified.'),
     
     asyncHandler(async function (req, res, next) {
         const errors = validationResult(req)
@@ -103,10 +106,10 @@ exports.postsPut = [
         }
         
         const id = req.params.id;
-        const { published, content, title, img } = req.body;
+        const { published, content, title, img, description } = req.body;
     
         try {
-            await Post.findByIdAndUpdate(id, { published, content, title, img }, {new: true});
+            await Post.findByIdAndUpdate(id, { published, content, title, img, description }, {new: true});
             res.json({msg: 'Post Updated!'});
         } catch (err) {
             console.error('Error in finding post by slug', err);
