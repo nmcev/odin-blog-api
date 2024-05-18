@@ -21,7 +21,7 @@ async function createSlug(title) {
 // posts routes
 exports.postsGet = asyncHandler(async function (req, res, next) {
 
-    const posts = await Post.find({});
+    const posts = await Post.find({}).populate('comments').exec();
     const postsWithPostedTime = posts.map(post => ({
         ...post.toJSON(),
         postedTime: luxon.DateTime.fromJSDate(post.date).toLocaleString(luxon.DateTime.DATE_MED)
