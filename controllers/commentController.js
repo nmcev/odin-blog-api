@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Comment = require('../models/Comment')
 const Post = require('../models/Post')
 const { body, validationResult } = require('express-validator')
-
+const luxon = require('luxon')
 
 exports.comment_get = asyncHandler(async function (req, res, next) {
     const comments = await Comment.find({})
@@ -36,7 +36,10 @@ exports.comment_post = [
 
         await newComment.save()
         await Post.findByIdAndUpdate(postId, { $push: { comments: newComment._id } })
-        res.json(newComment)
+        res.json({
+            ...newComment,
+            formattedDate: luxon.DateTime.fromJSDate(newComment.date).toLocaleString(luxon.DateTime.DATETIME_SHORT)
+        })
     })
 ]
 
