@@ -55,7 +55,7 @@ exports.postsGetId = asyncHandler(async function (req, res, next) {
             ...post.toObject(),
             comments: post.comments.map(comment => ({
                 ...comment.toObject(),
-                formattedDate: luxon.DateTime.fromJSDate(comment.date).toLocaleString(luxon.DateTime.DATETIME_SHORT)
+                formattedDate: DateTime.fromJSDate(comment.date).toLocaleString(DateTime.DATETIME_SHORT)
             }))
         };
 
