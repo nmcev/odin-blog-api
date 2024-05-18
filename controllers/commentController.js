@@ -30,7 +30,8 @@ exports.comment_post = [
         const newComment = new Comment({
             username: req.body.username,
             text: req.body.text,
-            post: postId
+            post: postId,
+            formattedDate: req.body.formattedDate,
         })
 
 
