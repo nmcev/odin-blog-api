@@ -1,4 +1,6 @@
 const aws = require('aws-sdk');
+require("aws-sdk/lib/maintenance_mode_message").suppress = true;
+
 require('dotenv').config();
 const crypto = require('crypto');
 const { promisify } = require('util');
