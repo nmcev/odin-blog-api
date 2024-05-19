@@ -61,7 +61,7 @@ router.get('/comments', commentControllers.comment_get)
 
 router.get('/comments/:id', commentControllers.comment_get_id)
 
-router.post('/comments', authenticateToken, commentControllers.comment_post)
+router.post('/comments', commentControllers.comment_post)
 
 router.put('/comments/:id', authenticateToken, commentControllers.comment_put)
 
