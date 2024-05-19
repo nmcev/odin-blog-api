@@ -54,7 +54,7 @@ exports.login_post = [
                     httpOnly: true,
                     secure: true,
                     sameSite: 'None'
-                }).json({ user, status: 'success' })
+                }).json({ status: 'success' })
             });
         } catch (error) {
             next(error);
